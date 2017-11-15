@@ -1,9 +1,11 @@
 #!flask/bin/python
 from flask import Flask, jsonify, request
 from flask_httpauth import HTTPBasicAuth
+from flask import render_template, redirect, url_for, session, flash
 from model import DBconn
-import sys, flask
-
+import sys, flask, os
+import warnings
+from flask.exthook import ExtDeprecationWarning
 
 app = Flask(__name__)
 auth = HTTPBasicAuth
@@ -26,15 +28,59 @@ def spcall(qry, param, commit=False):
 def index():
     return "Hi!"
 
-@app.route('/access', methods =['POST'])
-def signin():
-    un = request.form['admin']
-    pw =request.form['password']
+#@app.route('/access', methods =['POST'])
+#def signin():
+  #  un = request.form['admin']
+ #   pw =request.form['password']
 
-    res =spcall('checkaccess', (un, pw), True)
+  #  res =spcall('checkaccess', (un, pw), True)
 
-    return jsonify({'status': res[0][0]})
+  #  return jsonify({'status': res[0][0]})
 
+#View list of students
+@app.route ('/masterlist', methods=['GET'])
+def viewStudentlist():
+    res = spcall ('viewStudentlist', ())
+
+    if 'Error' in str (res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+    recs = []
+
+    for r in res:
+        recs.append ({"idnum": r[0], "fname": r[1], "mname": r[2], "lname": r[3], "yearLevel": r[4], "contactnum": r[5], "liability": r[6], "clearanceStat": r[7]})
+    return jsonify ({'status': 'ok', 'entries': recs, 'count': len (recs)})
+
+#View/Search Student details
+@app.route('/studentdata/<string:data>', methods=['GET'])
+def viewStudent(data):
+    res =spcall('viewStudent',(data,), True)
+	print res
+	if 'Error' in str(res[0][0]):
+		return jsonify({'status':'error', 'message':res[0][0]})
+
+	recs=[]
+	for r in res:
+		recs.append ({"idnum": r[0], "fname": r[1], "mname": r[2], "lname": r[3], "yearLevel": r[4], "contactnum": r[5], "liability": r[6], "clearanceStat": r[7]}))
+
+	return jsonify({'status':'ok', 'entries':recs, 'count':len(recs)})
+
+#Add new student
+@app.route ('/student', methods=['POST'])
+def addstudent():
+    id = request.form['id']
+    studfname = request.form['studfname']
+    studmname = request.form['studmname']
+    studlname = request.form['studlname']
+    yearlev = request.form['yearlev']
+    cnum = request.form['cnum']
+    liab = request.form['liab']
+    clearance = request.form['clearance']
+
+    res = spcall ("newStudent", (id, studfname, studmname, studlname, yearlev, cnum, liab, clearance), True)
+    if 'Student Exists' in res[0][0]:
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
 
 
 
