@@ -65,19 +65,18 @@ create or replace function checkaccess(par_un text, par_pw text) returns text as
 
 -- Table for student
 create table student(
-  idnum int8 primary key,
+  idnum text primary key,
   fname text not null,
   mname text not null,
   lname text not null,
-  course text not null,
-  yearLevel text,
+  yearLevel int2,
   contactnum text,
-  standing text,
+  liability text,
   clearanceStat text not null
 );
 
 -- Add new student
-create or replace function newStudent(par_idnum int8, par_fname text, par_mname text, par_lname text, par_course text, par_yearLevel text, par_contactnum text, par_standing text, par_clearanceStat text) returns text AS
+create or replace function newStudent(par_idnum text, par_fname text, par_mname text, par_lname text, par_yearLevel int2, par_contactnum text, par_liability text,  par_clearanceStat text) returns text AS
 $$
   DECLARE
     loc_id text;
@@ -86,7 +85,7 @@ $$
   BEGIN
     select into loc_id idnum from student where idnum = par_idnum;
     if loc_id isnull THEN
-      insert into student(idnum, fname, mname, lname, course, yearLevel, contactnum, standing, clearanceStat) values (par_idnum, par_fname, par_mname, par_lname, par_course, par_yearLevel, par_contactnum, par_standing, par_clearanceStat);
+      insert into student(idnum, fname, mname, lname, yearLevel, liability, contactnum, clearanceStat) values (par_idnum, par_fname, par_mname, par_lname, par_yearLevel, par_liability, par_contactnum, par_clearanceStat);
       loc_res = 'Student Added';
 
     ELSE
@@ -98,25 +97,26 @@ $$
   END;
 $$
   language 'plpgsql';
-  -- select newStudent(20131633, 'Nicole Raine', 'Segovia', 'Cabasa', 'BSEC', '5', '09263176063', 'Regular', 'Cleared');
+  -- select newStudent('2013-1633', 'Nicole Raine', 'Segovia', 'Cabasa', 5,, 'AF: Paid', '09263176063', 'Cleared');
 
--- View student details
-create or replace function viewStudent(in par_id int8, out int8, out text, out text, out text, out text, out text, out text, out text, out text) returns setof record AS
+
+-- View student details/Search
+create or replace function viewStudent(in par_data text, out text, out text, out text, out text, out int2, out text, out text, out text) returns setof record AS
 $$
-    select idnum, fname, mname, lname, course, yearLevel, contactnum, standing, clearanceStat from student where idnum = par_id;
+    select idnum, fname, mname, lname, yearLevel, contactnum, liability, clearanceStat from student where idnum = par_data or fname = par_data or mname = par_data or lname = par_data;
 $$
   language 'sql';
-  -- select viewStudent(20131633)
+  -- select viewStudent('2013-1633')
 
 -- View list of students
-create or replace function viewStudentlist(out int8, out text, out text, out text, out text, out text, out text, out text, out text) returns setof record as
+create or replace function viewStudentlist(out text, out text, out text, out text, out int2, out text, out text, out text) returns setof record as
 $$
-  select idnum, fname, mname, lname, course, yearLevel, contactnum, standing, clearanceStat from student;
+  select idnum, fname, mname, lname, yearLevel, contactnum, liability, clearanceStat from student;
 $$
   language 'sql';
 
 -- Update student details
-create or replace function updateStudent(in par_idnum int8, par_yearLevel text, par_contactnum text, par_standing text, par_clearanceStat text) returns text as
+create or replace function updateStudent(in par_idnum text, par_yearLevel int2, par_contactnum text, par_liability text, par_clearanceStat text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -126,7 +126,7 @@ $$
     if loc_id isnull then
       loc_res = 'Data not found';
     ELSE
-      update student set yearLevel = par_yearLevel, contactnum = par_contactnum, standing = par_standing, clearanceStat = par_clearanceStat where idnum = par_idnum;
+      update student set yearLevel = par_yearLevel, contactnum = par_contactnum, liability = par_liability, clearanceStat = par_clearanceStat where idnum = par_idnum;
     END IF;
       return loc_res;
   END;
@@ -134,7 +134,7 @@ $$
   language 'plpgsql';
 
 -- Delete student
-create or replace function delStudent(par_idnum int8) returns text as
+create or replace function delStudent(par_idnum text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -151,88 +151,6 @@ $$
   END;
 $$
   language 'plpgsql';
-
-
-------------------------------------------------------------------------------------------------------------------------
--- Table for Liability
-create table liability(
-  liabilityNo int primary key,
-  idnum int8,
-  dateAdded text not null,
-  deadline text not null,
-  particular text,
-  amount text,
-  FOREIGN KEY (idnum) REFERENCES student(idnum) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
--- //View liability
-create or replace function viewLiab(in par_id int8, out int, out int8, out text, out text, out text, out text) returns set of record as
-$$
-    select liabilityNo, dateAdded, deadline, particular, amount from liability where idnum = par_id;
-$$
-  language 'sql';
-  -- select viewLiab('2013-1633'))
-
--- ***Add new liability
-create or replace function newLiability(par_liabilityNo text, par_dateAdded text, par_deadline text, par_particular text, par_amount text) returns text AS
-$$
-  DECLARE
-    loc_id text;
-    loc_res text;
-
-  BEGIN
-    select into loc_id liabilityNo from liability where liabilityNo = par_liabilityNo;
-    if loc_liabilityNo isnull THEN
-      insert into liability(liabilityNo, dateAdded, deadline, particular, amount) values (par_liabilityNo, par_dateAdded, par_deadline, par_particular, par_amount);
-      loc_res = 'Liability Added';
-
-    ELSE
-      loc_res = 'Liability Exists';
-
-    END IF;
-    return loc_res;
-
-  END;
-$$
-  language 'plpgsql';
-
--- ***Update liability
-create or replace function updateLiability(in par_liabilityNo int8, in par_idnum text, par_deadline text, par_particular text, par_amount text) returns text as
-$$
-  DECLARE
-    loc_id text;
-    loc_res text;
-  BEGIN
-    select into loc_id liabilityNo from liability where liabilityNo = par_liabilityNo;
-    if loc_id isnull then
-      loc_res = 'Data not found';
-    ELSE
-      update liability set deadline = par_deadline, particular = par_particular, amount = par_amount where liabilityNo = par_liabilityNo;
-    END IF;
-      return loc_res;
-  END;
-$$
-  language 'plpgsql';
-
--- Delete liability
-create or replace function delLiability(par_liabilityNo int) returns text as
-$$
-  DECLARE
-    loc_id text;
-    loc_res text;
-  BEGIN
-    select into loc_id liabilityNo from liability where liabilityNo = par_liabilityNo;
-    if loc_id isnull THEN
-      loc_res = 'Liability does not exist';
-    ELSE
-      delete from liability where liabilityNo = par_liabilityNo;
-        loc_res = 'Liability deleted';
-    END IF;
-      return loc_res;
-  END;
-$$
-  language 'plpgsql';
-
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -398,13 +316,14 @@ $$
 create table societyTrans(
   transNo int primary key,
   transDate text,
+  deadline text,
   ornumber text,
   amount text,
   particular text
 );
 
 -- Add new society transaction
-create or replace function newSocietyTrans(par_transNo int, par_transDate text, par_ornumber text, par_amount text, par_particular text) returns text AS
+create or replace function newSocietyTrans(par_transNo int, par_transDate text, par_deadline text, par_ornumber text, par_amount text, par_particular text) returns text AS
 $$
   DECLARE
     loc_id text;
@@ -413,7 +332,7 @@ $$
   BEGIN
     select into loc_id transNo from societyTrans where transNo = par_transNo;
     if loc_id isnull THEN
-      insert into societyTrans(transNo, transDate, ornumber, amount, particular) values (par_transNo, par_transDate, par_ornumber, par_amount, par_particular);
+      insert into societyTrans(transNo, transDate, deadline, ornumber, amount, particular) values (par_transNo, par_transDate, par_deadline, par_ornumber, par_amount, par_particular);
       loc_res = 'Transaction Added';
 
     ELSE
@@ -427,14 +346,14 @@ $$
   language 'plpgsql';
 
 -- View list of transactions
-create or replace function viewTranslist(out int, out text, out text, out text, out text) returns setof record as
+create or replace function viewTranslist(out int, out text, out text, out text, out text, out text) returns setof record as
 $$
-  select transNo, transDate, ornumber, amount, particular from societyTrans;
+  select transNo, transDate, deadline, ornumber, amount, particular from societyTrans;
 $$
   language 'sql';
 
 -- Update society transactions
-create or replace function updateTrans(in par_transNo int, par_transDate text, par_ornumber text, par_amount text, par_particular text) returns text as
+create or replace function updateTrans(in par_transNo int, par_transDate text, par_deadline text, par_ornumber text, par_amount text, par_particular text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -445,7 +364,7 @@ $$
       loc_res = 'Society Transaction not found';
     ELSE
 
-      update societyTrans set transNo = par_transNo, transDate = par_transDate, ornumber = par_ornumber, amount = par_amount, particular = par_particular where transNo = par_transNo;
+      update societyTrans set transNo = par_transNo, transDate = par_transDate, deadline = par_deadline, ornumber = par_ornumber, amount = par_amount, particular = par_particular where transNo = par_transNo;
     END IF;
       return loc_res;
   END;
