@@ -61,7 +61,7 @@ def viewStudent(data):
 
 	recs=[]
 	for r in res:
-		recs.append ({"idnum": r[0], "fname": r[1], "mname": r[2], "lname": r[3], "yearLevel": r[4], "contactnum": r[5], "liability": r[6], "clearanceStat": r[7]}))
+		recs.append ({"idnum": r[0], "fname": r[1], "mname": r[2], "lname": r[3], "yearLevel": r[4], "contactnum": r[5], "liability": r[6], "clearanceStat": r[7]})
 
 	return jsonify({'status':'ok', 'entries':recs, 'count':len(recs)})
 
@@ -106,7 +106,7 @@ def viewEvent(data):
 
 	recs=[]
 	for r in res:
-		recs.append ({"eventNo": r[0], "eventName": r[1], "eventDate": r[2], "eventDesc": r[3]}))
+		recs.append ({"eventNo": r[0], "eventName": r[1], "eventDate": r[2], "eventDesc": r[3]})
 
 	return jsonify({'status':'ok', 'entries':recs, 'count':len(recs)})
 
@@ -124,6 +124,89 @@ def addevent():
 
     return jsonify ({'status': 'ok', 'message': res[0][0]})
 
+#View List of meetings
+@app.route ('/meetings', methods=['GET'])
+def viewMeetinglist():
+    res = spcall ('viewMeetinglist', ())
+
+    if 'Error' in str (res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+    recs = []
+
+    for r in res:
+        recs.append ({"meetingNo": r[0], "meetingName": r[1], "meetingDate": r[2], "meetingDesc": r[3]})
+    return jsonify ({'status': 'ok', 'entries': recs, 'count': len (recs)})
+
+#View/Search Meeting details
+@app.route('/meetingdetails/<string:data>', methods=['GET'])
+def viewMeeting(data):
+    res =spcall('viewMeeting',(data,), True)
+	print res
+	if 'Error' in str(res[0][0]):
+		return jsonify({'status':'error', 'message':res[0][0]})
+
+	recs=[]
+	for r in res:
+		recs.append ({"meetingNo": r[0], "meetingName": r[1], "meetingDate": r[2], "meetingDesc": r[3]})
+
+	return jsonify({'status':'ok', 'entries':recs, 'count':len(recs)})
+
+#Add new meeting
+@app.route ('/meeting', methods=['POST'])
+def addmeeting():
+    mNo = request.form['mNo']
+    mName = request.form['mName']
+    mDate = request.form['mDate']
+    mDesc = request.form['mDesc']
+
+    res = spcall ("newMeeting", (mNo, mName, mDate, mDesc), True)
+    if 'Meeting Exists' in res[0][0]:
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
+#View List of transactions
+@app.route ('/transactions', methods=['GET'])
+def viewTranslist():
+    res = spcall ('viewTranslist', ())
+
+    if 'Error' in str (res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+    recs = []
+
+    for r in res:
+        recs.append ({"transNo": r[0], "transDate": r[1], "deadline": r[2], "ornumber": r[3], "amount": r[4], "particular": r[5]})
+    return jsonify ({'status': 'ok', 'entries': recs, 'count': len (recs)})
+
+#View/Search Transaction details
+@app.route('/transactiondetails/<string:data>', methods=['GET'])
+def viewTrans(data):
+    res =spcall('viewTrans',(data,), True)
+	print res
+	if 'Error' in str(res[0][0]):
+		return jsonify({'status':'error', 'message':res[0][0]})
+
+	recs=[]
+	for r in res:
+		recs.append ({"transNo": r[0], "transDate": r[1], "deadline": r[2], "ornumber": r[3], "amount": r[4], "particular": r[5]})
+
+	return jsonify({'status':'ok', 'entries':recs, 'count':len(recs)})
+
+#Add new transaction
+@app.route ('/transaction', methods=['POST'])
+def addSocietyTrans():
+    tNo = request.form['tNo']
+    tDate = request.form['tdate']
+    tdeadline = request.form['tdeadline']
+    torn = request.form['torn']
+    tamt = request.form['tamt']
+    tpart = request.form['tpart']
+
+    res = spcall ("newSocietyTrans", (tNo, tDate, tdeadline, torn, tamt, tpart), True)
+    if 'Transaction Already Exists' in res[0][0]:
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
 
 
 @app.after_request
