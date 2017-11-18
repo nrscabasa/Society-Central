@@ -85,7 +85,7 @@ $$
   BEGIN
     select into loc_id idnum from student where idnum = par_idnum;
     if loc_id isnull THEN
-      insert into student(idnum, fname, mname, lname, yearLevel, liability, contactnum, clearanceStat) values (par_idnum, par_fname, par_mname, par_lname, par_yearLevel, par_liability, par_contactnum, par_clearanceStat);
+      insert into student(idnum, fname, mname, lname, yearLevel, contactnum, liability, clearanceStat) values (par_idnum, par_fname, par_mname, par_lname, par_yearLevel, par_contactnum, par_liability, par_clearanceStat);
       loc_res = 'Student Added';
 
     ELSE
@@ -97,7 +97,7 @@ $$
   END;
 $$
   language 'plpgsql';
-  -- select newStudent('2013-1633', 'Nicole Raine', 'Segovia', 'Cabasa', 5,, 'AF: Paid', '09263176063', 'Cleared');
+  -- select newStudent('2013-1633', 'Nicole Raine', 'Segovia', 'Cabasa', '5', '09263176063', 'AF: Paid', 'Cleared');
 
 
 -- View student details/Search
