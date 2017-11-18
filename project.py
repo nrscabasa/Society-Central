@@ -28,14 +28,15 @@ def spcall(qry, param, commit=False):
 def index():
     return "Hi!"
 
-#@app.route('/access', methods =['POST'])
-#def signin():
-  #  un = request.form['admin']
- #   pw =request.form['password']
+#Log in
+@app.route('/access', methods =['POST'])
+def login():
+    un = request.form['admin']
+    pw =request.form['password']
 
-  #  res =spcall('checkaccess', (un, pw), True)
+    res =spcall('checkaccess', (un, pw), True)
 
-  #  return jsonify({'status': res[0][0]})
+    return jsonify({'status': res[0][0]})
 
 #View list of students
 @app.route ('/masterlist', methods=['GET'])
@@ -82,6 +83,46 @@ def addstudent():
 
     return jsonify ({'status': 'ok', 'message': res[0][0]})
 
+#View List of events
+@app.route ('/events', methods=['GET'])
+def viewEventlist():
+    res = spcall ('viewEventlist', ())
+
+    if 'Error' in str (res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+    recs = []
+
+    for r in res:
+        recs.append ({"eventNo": r[0], "eventName": r[1], "eventDate": r[2], "eventDesc": r[3]})
+    return jsonify ({'status': 'ok', 'entries': recs, 'count': len (recs)})
+
+#View/Search Event details
+@app.route('/eventdata/<string:data>', methods=['GET'])
+def viewEvent(data):
+    res =spcall('viewEvent',(data,), True)
+	print res
+	if 'Error' in str(res[0][0]):
+		return jsonify({'status':'error', 'message':res[0][0]})
+
+	recs=[]
+	for r in res:
+		recs.append ({"eventNo": r[0], "eventName": r[1], "eventDate": r[2], "eventDesc": r[3]}))
+
+	return jsonify({'status':'ok', 'entries':recs, 'count':len(recs)})
+
+#Add new event
+@app.route ('/event', methods=['POST'])
+def addevent():
+    eNo = request.form['eNo']
+    eName = request.form['eName']
+    eDate = request.form['eDate']
+    eDesc = request.form['eDesc']
+
+    res = spcall ("newEvent", (eNo, eName, eDate, eDesc), True)
+    if 'Event Exists' in res[0][0]:
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
 
 
 
