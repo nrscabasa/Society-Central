@@ -367,7 +367,7 @@ $$
   language 'sql';
 
 -- View transaction details/Search
-create or replace function viewTrans(in par_data text, out text, out text, out text, out text, out text) returns setof record AS
+create or replace function viewTrans(in par_data text, out text, out text, out text, out text, out text, out text) returns setof record AS
 $$
     select transNo, transDate, deadline, ornumber, amount, particular from societyTrans where transNo = par_data or particular = par_data;
 $$
