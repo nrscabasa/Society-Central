@@ -156,14 +156,14 @@ $$
 ------------------------------------------------------------------------------------------------------------------------
 -- Table for Event
 create table event(
-  eventNo int primary key,
+  eventNo text primary key,
   eventName text not null,
   eventDate text,
   eventDesc text
 );
 
 -- Add new event
-create or replace function newEvent(par_eventNo int, par_eventName text, par_eventDate text, par_eventDesc text) returns text AS
+create or replace function newEvent(par_eventNo text, par_eventName text, par_eventDate text, par_eventDesc text) returns text AS
 $$
   DECLARE
     loc_id text;
@@ -186,14 +186,21 @@ $$
   language 'plpgsql';
 
 -- View list of events
-create or replace function viewEventlist(out int, out text, out text, out text) returns setof record as
+create or replace function viewEventlist(out text, out text, out text, out text) returns setof record as
 $$
   select eventNo, eventName, eventDate, eventDesc from event;
 $$
   language 'sql';
 
+-- View event details/Search
+create or replace function viewEvent(in par_data text, out text, out text, out text, out text) returns setof record AS
+$$
+    select eventNo, eventName, eventDate, eventDesc from event where eventNo = par_data or eventName = par_data;
+$$
+  language 'sql';
+
 -- Update event
-create or replace function updateEvent(in par_eventNo int, par_eventName text, par_eventDate text, par_eventDesc text) returns text as
+create or replace function updateEvent(in par_eventNo text, par_eventName text, par_eventDate text, par_eventDesc text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -213,7 +220,7 @@ $$
 
 
 -- Delete event
-create or replace function delEvent(par_eventNo int) returns text as
+create or replace function delEvent(par_eventNo text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -236,14 +243,14 @@ $$
 ------------------------------------------------------------------------------------------------------------------------
 -- Table for Meeting
 create table meeting(
-  meetingNo int primary key,
+  meetingNo text primary key,
   meetingName text not null,
   meetingDate text,
   meetingDesc text
 );
 
 -- Add new meeting
-create or replace function newMeeting(par_meetingNo int, par_meetingName text, par_meetingDate text, par_meetingDesc text) returns text AS
+create or replace function newMeeting(par_meetingNo text, par_meetingName text, par_meetingDate text, par_meetingDesc text) returns text AS
 $$
   DECLARE
     loc_id text;
@@ -266,14 +273,21 @@ $$
   language 'plpgsql';
 
 -- View list of meetings
-create or replace function viewMeetinglist(out int, out text, out text, out text) returns setof record as
+create or replace function viewMeetinglist(out text, out text, out text, out text) returns setof record as
 $$
   select meetingNo, meetingName, meetingDate, meetingDesc from meeting;
 $$
   language 'sql';
 
+-- View meeting details/Search
+create or replace function viewMeeting(in par_data text, out text, out text, out text, out text) returns setof record AS
+$$
+    select meetingNo, meetingName, meetingDate, meetingDesc from meeting where meetingNo = par_data or meetingName = par_data;
+$$
+  language 'sql';
+
 -- Update meeting
-create or replace function updateMeeting(in par_meetingNo int, par_meetingName text, par_meetingDate text, par_meetingDesc text) returns text as
+create or replace function updateMeeting(in par_meetingNo text, par_meetingName text, par_meetingDate text, par_meetingDesc text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -293,7 +307,7 @@ $$
 
 
 -- Delete meeting
-create or replace function delMeeting(par_meetingNo int) returns text as
+create or replace function delMeeting(par_meetingNo text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -314,7 +328,7 @@ $$
 ------------------------------------------------------------------------------------------------------------------------
 -- Table for SocietyTransaction
 create table societyTrans(
-  transNo int primary key,
+  transNo text primary key,
   transDate text,
   deadline text,
   ornumber text,
@@ -323,7 +337,7 @@ create table societyTrans(
 );
 
 -- Add new society transaction
-create or replace function newSocietyTrans(par_transNo int, par_transDate text, par_deadline text, par_ornumber text, par_amount text, par_particular text) returns text AS
+create or replace function newSocietyTrans(par_transNo text, par_transDate text, par_deadline text, par_ornumber text, par_amount text, par_particular text) returns text AS
 $$
   DECLARE
     loc_id text;
@@ -346,9 +360,16 @@ $$
   language 'plpgsql';
 
 -- View list of transactions
-create or replace function viewTranslist(out int, out text, out text, out text, out text, out text) returns setof record as
+create or replace function viewTranslist(out text, out text, out text, out text, out text, out text) returns setof record as
 $$
   select transNo, transDate, deadline, ornumber, amount, particular from societyTrans;
+$$
+  language 'sql';
+
+-- View transaction details/Search
+create or replace function viewTrans(in par_data text, out text, out text, out text, out text, out text) returns setof record AS
+$$
+    select transNo, transDate, deadline, ornumber, amount, particular from societyTrans where transNo = par_data or particular = par_data;
 $$
   language 'sql';
 
