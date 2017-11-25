@@ -172,3 +172,52 @@ function rowelist(eventDate, eventDesc, eventName, eventNo)
 
 }
 
+
+function showmeetinglist(){
+
+	$.ajax({
+		url: 'http://127.0.0.1:5000/meetings',
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			$('#smeetings').html("");
+			if(resp.status == 'ok'){
+				for(i=0;  i<resp.count; i++)
+				{
+					meetingDate = resp.entries[i].meetingDate;
+					meetingDesc = resp.entries[i].meetingDesc;
+					meetingName = resp.entries[i].meetingName;
+					meetingNo = resp.entries[i].meetingNo;
+
+
+					$('#smeetings').append(rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo));
+
+
+				}
+			}
+			else{
+				$('').html("");
+                alert(resp.message);
+			}
+		},
+		error: function(err)
+		{
+			alert("Error");
+		}
+	});
+}
+
+function rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo)
+{
+
+	return '<tr class="table-success">'+
+			'<td>'+meetingNo+'</td>'+
+			'<td>'+meetingName+'</td>'+
+			'<td>'+meetingDate+'</td>'+
+			'<td>'+meetingDesc+'</td>'+
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'</tr>';
+
+}
+
