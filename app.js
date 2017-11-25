@@ -221,3 +221,55 @@ function rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo)
 
 }
 
+
+function showsoctlist(){
+
+	$.ajax({
+		url: 'http://127.0.0.1:5000/transactions',
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			$('#ssoctlist').html("");
+			if(resp.status == 'ok'){
+				for(i=0;  i<resp.count; i++)
+				{
+					amount = resp.entries[i].amount;
+					deadline = resp.entries[i].deadline;
+					ornumber = resp.entries[i].ornumber;
+					particular = resp.entries[i].particular;
+					transDate = resp.entries[i].transDate;
+					transNo = resp.entries[i].transNo;
+
+					$('#ssoctlist').append(rowstlist(amount, deadline, ornumber, particular, transDate, transNo));
+
+
+				}
+			}
+			else{
+				$('').html("");
+                alert(resp.message);
+			}
+		},
+		error: function(err)
+		{
+			alert("Error");
+		}
+	});
+}
+
+function rowstlist(amount, deadline, ornumber, particular, transDate, transNo)
+{
+
+	return '<tr class="table-success">'+
+			'<td>'+transNo+'</td>'+
+			'<td>'+transDate+'</td>'+
+			'<td>'+deadline+'</td>'+
+			'<td>'+ornumber+'</td>'+
+			'<td>'+amount+'</td>'+
+			'<td>'+particular+'</td>'+
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'</tr>';
+
+}
+
