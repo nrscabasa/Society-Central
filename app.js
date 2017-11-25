@@ -122,3 +122,53 @@ function rowmlist(clearanceStat, contactnum, fname, idnum, liability, lname, mna
 			'</tr>';
 
 }
+
+
+function showeventlist(){
+
+	$.ajax({
+		url: 'http://127.0.0.1:5000/events',
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			$('#sevents').html("");
+			if(resp.status == 'ok'){
+				for(i=0;  i<resp.count; i++)
+				{
+					eventDate = resp.entries[i].eventDate;
+					eventDesc = resp.entries[i].eventDesc;
+					eventName = resp.entries[i].eventName;
+					eventNo = resp.entries[i].eventNo;
+
+
+					$('#sevents').append(rowelist(eventDate, eventDesc, eventName, eventNo));
+
+
+				}
+			}
+			else{
+				$('').html("");
+                alert(resp.message);
+			}
+		},
+		error: function(err)
+		{
+			alert("Error");
+		}
+	});
+}
+
+function rowelist(eventDate, eventDesc, eventName, eventNo)
+{
+
+	return '<tr class="table-success">'+
+			'<td>'+eventNo+'</td>'+
+			'<td>'+eventName+'</td>'+
+			'<td>'+eventDate+'</td>'+
+			'<td>'+eventDesc+'</td>'+
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'</tr>';
+
+}
+
