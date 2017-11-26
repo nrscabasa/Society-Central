@@ -3,10 +3,15 @@ $(function(){
 
 		$('#mlist').show();
 		$('#mlisttable').hide();
+		$('#searchedml').hide();
 
 	});
 
+
 	$('#event').click(function(){
+
+        $('#elist').show();
+		$('#elisttable').hide();
 
 		$('#mlist').hide();
 		$('#mlisttable').hide();
@@ -29,7 +34,7 @@ $(function(){
 
 });
 
-
+var data;
 function login(){
 	var un=$('#admin').val();
 	var pw= $('#password').val();
@@ -64,6 +69,24 @@ function login(){
 }
 
 
+function rowmlist(clearanceStat, contactnum, fname, idnum, liability, lname, mname, yearLevel)
+{
+
+	return '<tr class="table-success" onclick="clickdata(this)">'+
+			'<td>'+idnum+'</td>'+
+			'<td>'+fname+'</td>'+
+			'<td>'+mname+'</td>'+
+			'<td>'+lname+'</td>'+
+			'<td>'+yearLevel+'</td>'+
+			'<td>'+contactnum+'</td>'+
+			'<td>'+liability+'</td>'+
+			'<td>'+clearanceStat+'</td>'+
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button>' +
+			'</a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'</tr>';
+
+}
+
 function showmasterlist(){
 
 	$.ajax({
@@ -91,6 +114,8 @@ function showmasterlist(){
 					$('#smasterlist').append(rowmlist(clearanceStat, contactnum, fname, idnum, liability, lname, mname, yearLevel));
                     $('#mlist').show();
                     $('#mlisttable').show();
+                    $('#searchedml').hide();
+                    $('#viewsmlist').hide();
 
 				}
 			}
@@ -106,22 +131,173 @@ function showmasterlist(){
 	});
 }
 
-function rowmlist(clearanceStat, contactnum, fname, idnum, liability, lname, mname, yearLevel)
-{
+function searchmlist(){
 
-	return '<tr class="table-success">'+
-			'<td>'+idnum+'</td>'+
-			'<td>'+fname+'</td>'+
-			'<td>'+mname+'</td>'+
-			'<td>'+lname+'</td>'+
-			'<td>'+yearLevel+'</td>'+
-			'<td>'+contactnum+'</td>'+
-			'<td>'+liability+'</td>'+
-			'<td>'+clearanceStat+'</td>'+
-			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
-			'</tr>';
+	var data =$('#mldata').val();
+	$.ajax({
+		url: 'http://127.0.0.1:5000/studentdata/'+data,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			$("#searchedml").html("");
+
+			if(resp.status == 'ok'){
+				for(i=0; i<resp.count; i++)
+				{
+					clearanceStat = resp.entries[i].clearanceStat;
+					contactnum = resp.entries[i].contactnum;
+					fname = resp.entries[i].fname;
+					idnum = resp.entries[i].idnum;
+					liability = resp.entries[i].liability;
+					lname = resp.entries[i].lname;
+					mname = resp.entries[i].mname;
+					yearLevel = resp.entries[i].yearLevel;
+
+					$("#searchedml").append(rowmlist(clearanceStat, contactnum, fname, idnum, liability, lname, mname, yearLevel));
+					$('#viewsmlist').show();
+					$('#mlisttable').hide();
+					$('#searchedml').show();
+					$('#viewsmlist').show();
+
+				}
+
+			}
+			else{
+				$("#searchedml").html("");
+				alert(resp.message);
+			}
+
+		},
+		error: function(err)
+		{
+
+			alert("Error in the system occurred");
+		}
+
+
+	});
+}
+
+function addstudent(){
+	$.ajax({
+		data:{
+			id: $('#id').val(),
+			studfname:$('#studfname').val(),
+			studmname:$('#studmname').val(),
+			studlname:$('#studlname').val(),
+			yearlev:$('#yearlev').val(),
+			cnum:$('#cnum').val(),
+			liab:$('#liab').val(),
+			clearance:$('#clearance').val(),
+		},
+		url:'http://127.0.0.1:5000/student',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert(resp.message);
+		    updateas();
+			showmasterlist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+}
+
+function updateas(){
+    document.getElementById('id').value="";
+    document.getElementById('studfname').value="";
+    document.getElementById('studmname').value="";
+    document.getElementById('studlname').value="";
+    document.getElementById('yearlev').value="";
+    document.getElementById('cnum').value="";
+    document.getElementById('liab').value="";
+    document.getElementById('clearance').value="";
 
 }
+
+//Data per row in MASTER LIST TABLE
+function clickdata(a) {
+
+    var n = a.rowIndex;
+    n = n-1;
+    data = document.getElementById("smasterlist").rows[n].cells[0].innerHTML;
+    document.getElementById('studid').value = data;
+
+}
+
+function editstudent() {
+
+    $.ajax({
+		data:{
+			studid: $('#studid').val(),
+			studyearlev:$('#studyearlev').val(),
+			studcnum:$('#studcnum').val(),
+			studliab:$('#studliab').val(),
+			studclearance:$('#studclearance').val(),
+		},
+		url:'http://127.0.0.1:5000/stud',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert("Updated");
+		    updatees();
+			showmasterlist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+
+}
+
+function updatees(){
+    document.getElementById('studyearlev').value="";
+    document.getElementById('studcnum').value="";
+    document.getElementById('studliab').value="";
+    document.getElementById('studclearance').value="";
+
+}
+
+function deletestudent() {
+
+    $.ajax({
+		url: 'http://127.0.0.1:5000/stud/'+data,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			if(resp.status == 'ok'){
+			    //location.reload();
+				//$("#delete").modal('hide');
+				showmasterlist();
+
+			}
+			else{
+
+                alert(resp.message);
+			}
+		},
+		error: function(err)
+		{
+			alert("Error");
+		}
+	});
+
+}
+
+
+
+
 
 
 function showeventlist(){
@@ -143,6 +319,8 @@ function showeventlist(){
 
 
 					$('#sevents').append(rowelist(eventDate, eventDesc, eventName, eventNo));
+					$('#elist').show();
+                    $('#elisttable').show();
 
 
 				}
@@ -167,7 +345,8 @@ function rowelist(eventDate, eventDesc, eventName, eventNo)
 			'<td>'+eventName+'</td>'+
 			'<td>'+eventDate+'</td>'+
 			'<td>'+eventDesc+'</td>'+
-			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button onclick= class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button>'+
+			'</a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
 			'</tr>';
 
 }
