@@ -8,10 +8,18 @@
             EVENTS
         </title>
 
-        <link href="assets/css/bootstrap.css" rel="stylesheet" />
-        <link href="assets/css/font-awesome.css" rel="stylesheet" />
-        <link href="assets/css/style.css" rel="stylesheet" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <link href="assets/css/bootstrap.css" rel="stylesheet" />
+            <link href="assets/css/font-awesome.css" rel="stylesheet" />
+            <link href="assets/css/style.css" rel="stylesheet" />
+            <link href="assets/css/dataTables.bootstrap.css" rel="stylesheet">
+            <link href="assets/css/table/jquery.dataTables.min.css" rel="stylesheet" >
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+            <link href="ui/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="jQuery-2.1.4.min.js"></script>
+            <script src="js/bootstrap.min.js"></script>
+            <script type="text/javascript" src ="app.js"></script>
+
     </head>
 
     <body>
@@ -26,51 +34,230 @@
                     </button>
                     <img src="assets/img/logo.png" />
                     <a class="navbar-brand" href="masterlist.html"></a>
-                </div>
-                <div class="navbar-collapse collapse ">
-                    <ul id="menu-top" class="nav navbar-nav navbar-right" style="margin-top: 30px">
-                        <li><a href="masterlist.html">Master List</a></li>
-                        <li><a class="menu-top-active" href="event.html">Event</a></li>
-                        <li><a href="meeting.html">Meeting</a></li>
-                        <li><a href="transaction.html">Society Transaction</a></li>
-                        <li><a href="login.html" style="margin-left: 30px">Logout</a></li>
-                    </ul>
+
                 </div>
             </div>
         </div>
         <!--END OF LOGO HEADER-->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--START OF FOOTER-->
-        <footer>
+        <!--START OF MENU SECTION-->
+        <section class="menu-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        &copy; 2017 Society Central | By : <a>NRSC</a>
+                        <div class="navbar-collapse collapse ">
+                            <ul id="menu-top" class="nav navbar-nav navbar-right">
+                                <li id="home"><a href="home.html">Home</a></li>
+                                <li id="masterlist"><a href="masterlist.html">Master List</a></li>
+                                <li id="event"><a class="menu-top-active" href="event.html">Event</a></li>
+                                <li id="meeting"><a href="meeting.html">Meeting</a></li>
+                                <li id="transaction"><a href="transaction.html">Society Transaction</a></li>
+                                <li><a href="login.html" style="margin-left: 35px">Logout</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!--END OF FOOTER-->
+        </section>
+        <!--END OF MENU SECTION-->
 
+         <!--START OF HEADER-->
+        <div class="content-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success" align="center">
+                            This is for the Aspiring Body of Achievers as a Computer Upgraded Society.
+                            Only officers and advisers have the right to access this platform.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--END OF HEADER-->
+
+        <!-- START OF CONTENT -->
+            <div class="content-wrapper" >
+                <div class="container">
+                    <div id="elist" align="left" >
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="page-head-line"><b>List of Events</b></h4>
+                            </div>
+                        </div>
+                        <form class="form-inline" pull-left>
+                            <br>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Event</button>
+                            <button type="button" onclick="showeventlist();" class="btn btn-primary">Show event list</button>
+
+                            <div class="form-group">
+							    <input type="text" class="form-control" id="eldata" name="eldata" placeholder="Search">
+							    <a href="#"><span onclick= "searchelist();" class="glyphicon glyphicon-search"></span></a>
+						    </div>
+                            <br><br><br>
+                        </form>
+                    </div>
+
+                    <!-- SHOW LIST OF EVENTS -->
+                    <div id="elisttable" class="row" style="display:none">
+                        <div class="col-md-12">
+                            <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Event Number</th>
+                                            <th>Event Name</th>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="sevents"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF LIST OF EVENTS -->
+
+                    <!-- SEARCH LIST OF EVENTS -->
+                    <div id="viewselist" class="row" style="display:none">
+                        <div class="col-md-12">
+                            <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Event Number</th>
+                                            <th>Event Name</th>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchedel"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF SEARCH LIST OF EVENTS -->
+
+                    <!-- ADD EVENTS -->
+                    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <span aria-hidden="true">&times;</span>
+                                        <span class="sr-only">Close</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Event</h4>
+                                </div>
+
+                                <!--MODAL BODY-->
+                                <div class="modal-body">
+                                    <form role="form" action="">
+                                        <div class="form-group">
+                                            <label for="eNo">Event Number</label>
+                                            <input type="text" class="form-control" id="eNo" placeholder="**-***-**" required="required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="eName">Event Name</label>
+                                            <input type="text" class="form-control" id="eName" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="eDate">Date</label>
+                                            <input type="text" class="form-control" id="eDate" placeholder="mm/dd/yyyy">
+                                        </div>
+                                         <div class="form-group">
+                                            <label for="eDesc">Description</label>
+                                            <input type="text" class="form-control" id="eDesc" placeholder="">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" onclick="addevent();" class="btn btn-success btn-lg" data-dismiss="modal">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF ADD EVENTS -->
+
+                    <!-- UPDATE EVENTS -->
+                    <div id="edit" class="modal fade" aria-hidden="true" aria-labelledby="edit" role="dialog" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
+                                    <h4 id="Heading" class="modal-title custom_align">Edit Event Details</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" action="" method="POST">
+                                        <div class="form-group">
+                                            <label for="evtNo">Event Number</label>
+                                            <input type="text" class="form-control" id="evtNo" required="required" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="evtName">Event Name</label>
+                                            <input type="text" class="form-control" id="evtName" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="evtDate">Date</label>
+                                            <input type="text" class="form-control" id="evtDate" placeholder="mm/dd/yyyy">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="evtDesc">Description</label>
+                                            <input type="text" class="form-control" id="evtDesc" placeholder="">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" onclick="editevent();" class="btn btn-success btn-lg" data-dismiss="modal">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF UPDATE EVENTS -->
+
+                    <!-- DELETE EVENTS -->
+                    <div id="delete" class="modal fade" aria-hidden="true" aria-labelledy="edit" role="dialog" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
+                                    <h4 id="Heading" class="modal-title custom_align">Delete</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger">
+                                        <span class="glyphicon glyphicon-warning-sign"></span>
+                                        Are you sure you want to delete this record?
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button onclick="deleteevent();" class="btn btn-success" data-dismiss="modal"  type="button">
+                                        <span class="glyphicon glyphicon-ok-sign"></span>
+                                        Yes
+                                    </button>
+                                    <button class="btn btn-default" data-dismiss="modal" type="button">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        No
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF DELETE EVENTS -->
+
+                </div>
+            </div>
+            <!-- END OF CONTENT -->
 
     </body>
-
         <script src="jQuery-2.1.4.min.js"></script>
+        <script src="ui/js/bootstrap.min.js"></script>
 	    <script src="app.js"></script>
+        <script src="assets/js/jquery-1.11.1.js"></script>
+	    <script src="assets/js/jquery.dataTables.min.js"></script>
+	    <script src="assets/js/dataTables.bootstrap.js"></script>
+	    <script src="assets/js/bootstrap.js"></script>
 
 </html>
