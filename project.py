@@ -150,6 +150,30 @@ def addevent():
 
     return jsonify ({'status': 'ok', 'message': res[0][0]})
 
+#Update event
+@app.route('/evt', methods=['POST'])
+def updateevt():
+    evtNo = request.form['evtNo']
+    evtName = request.form['evtName']
+    evtDate = request.form['evtDate']
+    evtDesc = request.form['evtDesc']
+
+    res = spcall ("updateEvent", (evtNo, evtName, evtDate, evtDesc), True)
+    if 'Error' in str(res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
+#Delete event
+@app.route('/evt/<string:data>', methods=['GET'])
+def deleteevt(data):
+    res = spcall ("delEvent", (data,), True)
+    if 'Error' in str(res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
+
 #View List of meetings
 @app.route ('/meetings', methods=['GET'])
 def viewMeetinglist():
