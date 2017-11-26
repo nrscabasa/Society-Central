@@ -1,3 +1,4 @@
+<!-- By: Nicole Raine S. Cabasa -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -48,10 +49,11 @@
                     <div class="col-md-12">
                         <div class="navbar-collapse collapse ">
                             <ul id="menu-top" class="nav navbar-nav navbar-right">
+                                <li id="home"><a  href="home.html">Home</a></li>
                                 <li id="masterlist"><a class="menu-top-active" href="#">Master List</a></li>
-                                <li id="event"><a href="#">Event</a></li>
-                                <li id="meeting"><a href="#">Meeting</a></li>
-                                <li id="transaction"><a href="#">Society Transaction</a></li>
+                                <li id="event"><a href="event.html">Event</a></li>
+                                <li id="meeting"><a href="meeting.html">Meeting</a></li>
+                                <li id="transaction"><a href="transaction.html">Society Transaction</a></li>
                                 <li><a href="login.html" style="margin-left: 35px">Logout</a></li>
                             </ul>
                         </div>
@@ -78,14 +80,29 @@
 
 
         <!--START OF CONTENT -->
-            <!-- START OF MASTER LIST -->
             <div class="content-wrapper">
                 <div class="container">
-                    <div id="mlist" align="center">
-                        <button type="button" onclick="showmasterlist();" class="btn btn-primary">Show master list</button>
+                    <div id="mlist" align="left">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="page-head-line"><b>Master List</b></h4>
+                            </div>
+                        </div>
+                        <form class="form-inline" pull-left>
+                            <br>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Student</button>
+                            <button type="button" onclick="showmasterlist();" class="btn btn-primary">Show master list</button>
+
+                            <div class="form-group">
+							    <input type="text" class="form-control" id="mldata" name="mldata" placeholder="Search">
+							    <a href="#"><span onclick= "searchmlist();" class="glyphicon glyphicon-search"></span></a>
+						    </div>
+                            <br><br><br>
+                        </form>
                     </div>
 
-                    <div id="mlisttable" class="row">
+                    <!-- SHOW MASTER LIST -->
+                    <div id="mlisttable" class="row" style="display:none">
                         <div class="col-md-12">
                             <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
                                 <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
@@ -107,35 +124,163 @@
                             </div>
                         </div>
                     </div>
-                </div>
-            </div>
-            <!-- END OF MASTERLIST -->
-        <!--END OF CONTENT -->
+                    <!-- EOF SHOW MASTER LIST -->
 
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--START OF FOOTER-->
-        <footer>
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        &copy; 2017 Society Central | By : NRSC
+                    <!-- SEARCH MASTER LIST -->
+                    <div id="viewsmlist" class="row" style="display:none">
+                        <div class="col-md-12">
+                            <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>ID Number</th>
+                                            <th>First Name</th>
+                                            <th>Middle Name</th>
+                                            <th>Last Name</th>
+                                            <th>Year Level</th>
+                                            <th>Contact Number</th>
+                                            <th>Liability</th>
+                                            <th>Clearance Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchedml"></tbody>
+                                </table>
+                            </div>
+                        </div>
                     </div>
+                    <!-- EOF SEARCH MASTER LIST -->
+
+                    <!-- ADD STUDENT -->
+                    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <span aria-hidden="true">&times;</span>
+                                        <span class="sr-only">Close</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Student</h4>
+                                </div>
+
+                                <!--MODAL BODY-->
+                                <div class="modal-body">
+                                    <form role="form" action="">
+                                        <div class="form-group">
+                                            <label for="id">ID Number</label>
+                                            <input type="text" class="form-control" id="id" placeholder="**** - ****" required="required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="studfname">First Name</label>
+                                            <input type="text" class="form-control" id="studfname" placeholder="First Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="studmname">Middle Name</label>
+                                            <input type="text" class="form-control" id="studmname" placeholder="Middle Name">
+                                        </div>
+                                         <div class="form-group">
+                                            <label for="studlname">Last Name</label>
+                                            <input type="text" class="form-control" id="studlname" placeholder="Last Name">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="yearlev">Year Level</label>
+                                            <input type="text" class="form-control" id="yearlev" placeholder="(1/2/3/4/5)">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cnum">Contact Number</label>
+                                            <input type="text" class="form-control" id="cnum" placeholder="+639*********">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="liab">Liability</label>
+                                            <input type="text" class="form-control" id="liab" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="clearance">Clearance Status</label>
+                                            <input type="text" class="form-control" id="clearance" placeholder="Cleared/Not Cleared">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" onclick="addstudent();" class="btn btn-success btn-lg" data-dismiss="modal">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF ADD STUDENT -->
+
+                    <!-- UPDATE STUDENT -->
+                    <div id="edit" class="modal fade" aria-hidden="true" aria-labelledby="edit" role="dialog" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
+                                    <h4 id="Heading" class="modal-title custom_align">Edit Details</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" action="" method="POST">
+                                        <div class="form-group">
+                                            <label for="id">ID Number</label>
+                                            <input type="text" class="form-control" id="studid"  required="required" readonly>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label for="yearlev">Year Level</label>
+                                            <input type="text" class="form-control" id="studyearlev" placeholder="(1/2/3/4/5)">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="cnum">Contact Number</label>
+                                            <input type="text" class="form-control" id="studcnum" placeholder="+639*********">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="liab">Liability</label>
+                                            <input type="text" class="form-control" id="studliab" placeholder="">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="clearance">Clearance Status</label>
+                                            <input type="text" class="form-control" id="studclearance" placeholder="Cleared/Not Cleared">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" onclick="editstudent();" class="btn btn-success btn-lg" data-dismiss="modal">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF UPDATE STUDENT -->
+
+                    <!-- DELETE STUDENT -->
+                    <div id="delete" class="modal fade" aria-hidden="true" aria-labelledy="edit" role="dialog" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
+                                    <h4 id="Heading" class="modal-title custom_align">Delete</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger">
+                                        <span class="glyphicon glyphicon-warning-sign"></span>
+                                        Are you sure you want to delete this record?
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button onclick="deletestudent();" class="btn btn-success" data-dismiss="modal"  type="button">
+                                        <span class="glyphicon glyphicon-ok-sign"></span>
+                                        Yes
+                                    </button>
+                                    <button class="btn btn-default" data-dismiss="modal" type="button">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        No
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF DELETE STUDENT -->
                 </div>
             </div>
-        </footer>
-        <!--END OF FOOTER-->
 
+        <!--END OF CONTENT -->
 
     </body>
 
