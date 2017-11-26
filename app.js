@@ -12,9 +12,7 @@ $(function(){
 
         $('#elist').show();
 		$('#elisttable').hide();
-
-		$('#mlist').hide();
-		$('#mlisttable').hide();
+		$('#searchedel').hide();
 
 	});
 
@@ -35,6 +33,8 @@ $(function(){
 });
 
 var data;
+var data2;
+
 function login(){
 	var un=$('#admin').val();
 	var pw= $('#password').val();
@@ -68,7 +68,7 @@ function login(){
 	});
 }
 
-
+///////////////////////////////////////////////////// M A S T E R  L I S T ////////////////////////////////////////////////
 function rowmlist(clearanceStat, contactnum, fname, idnum, liability, lname, mname, yearLevel)
 {
 
@@ -116,6 +116,7 @@ function showmasterlist(){
                     $('#mlisttable').show();
                     $('#searchedml').hide();
                     $('#viewsmlist').hide();
+                    document.getElementById('mldata').value="";
 
 				}
 			}
@@ -159,6 +160,7 @@ function searchmlist(){
 					$('#mlisttable').hide();
 					$('#searchedml').show();
 					$('#viewsmlist').show();
+
 
 				}
 
@@ -298,7 +300,20 @@ function deletestudent() {
 
 
 
+///////////////////////////////////////////////////// E V E N T S ////////////////////////////////////////////////
+function rowelist(eventDate, eventDesc, eventName, eventNo)
+{
 
+	return '<tr class="table-success" onclick="clickdata2(this)">'+
+			'<td>'+eventNo+'</td>'+
+			'<td>'+eventName+'</td>'+
+			'<td>'+eventDate+'</td>'+
+			'<td>'+eventDesc+'</td>'+
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button>' +
+			'</a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'</tr>';
+
+}
 
 function showeventlist(){
 
@@ -321,12 +336,14 @@ function showeventlist(){
 					$('#sevents').append(rowelist(eventDate, eventDesc, eventName, eventNo));
 					$('#elist').show();
                     $('#elisttable').show();
-
+                    $('#searchedel').hide();
+                    $('#viewselist').hide();
+                    document.getElementById('eldata').value="";
 
 				}
 			}
 			else{
-				$('').html("");
+				$('searchedel').html("");
                 alert(resp.message);
 			}
 		},
@@ -337,20 +354,185 @@ function showeventlist(){
 	});
 }
 
-function rowelist(eventDate, eventDesc, eventName, eventNo)
-{
+function searchelist(){
 
-	return '<tr class="table-success">'+
-			'<td>'+eventNo+'</td>'+
-			'<td>'+eventName+'</td>'+
-			'<td>'+eventDate+'</td>'+
-			'<td>'+eventDesc+'</td>'+
-			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button onclick= class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button>'+
-			'</a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
-			'</tr>';
+	var data =$('#eldata').val();
+	$.ajax({
+		url: 'http://127.0.0.1:5000/eventdata/'+data,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			$("#searchedel").html("");
+
+			if(resp.status == 'ok'){
+				for(i=0; i<resp.count; i++)
+				{
+					eventDate = resp.entries[i].eventDate;
+					eventDesc = resp.entries[i].eventDesc;
+					eventName = resp.entries[i].eventName;
+					eventNo = resp.entries[i].eventNo;
+
+					$("#searchedel").append(rowelist(eventDate, eventDesc, eventName, eventNo));
+					$('#viewselist').show();
+					$('#elisttable').hide();
+					//$('#sevents').hide();
+					$('#searchedel').show();
+					//$('#viewselist').show();
+
+				}
+
+			}
+			else{
+				$("#searchedel").html("");
+				alert(resp.message);
+			}
+
+		},
+		error: function(err)
+		{
+
+			alert("Error in the system occurred");
+		}
+
+
+	});
+}
+
+function addevent(){
+	$.ajax({
+		data:{
+			eNo: $('#eNo').val(),
+			eName:$('#eName').val(),
+			eDate:$('#eDate').val(),
+			eDesc:$('#eDesc').val(),
+
+		},
+		url:'http://127.0.0.1:5000/event',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert(resp.message);
+		    updateae();
+			showeventlist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+}
+
+function updateae(){
+    document.getElementById('eNo').value="";
+    document.getElementById('eName').value="";
+    document.getElementById('eDate').value="";
+    document.getElementById('eDesc').value="";
 
 }
 
+
+//Data per row in EVENT LIST TABLE
+function clickdata2(b) {
+
+    var n = b.rowIndex;
+    n = n-1;
+    data2 = document.getElementById("sevents").rows[n].cells[0].innerHTML;
+    document.getElementById('evtNo').value = data2;
+
+}
+
+function editevent() {
+
+    $.ajax({
+		data:{
+			evtNo: $('#evtNo').val(),
+			evtName:$('#evtName').val(),
+			evtDate:$('#evtDate').val(),
+			evtDesc:$('#evtDesc').val(),
+
+		},
+		url:'http://127.0.0.1:5000/evt',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert("Updated");
+		    updateee();
+			showeventlist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+
+}
+
+function updateee(){
+    document.getElementById('evtNo').value="";
+    document.getElementById('evtName').value="";
+    document.getElementById('evtDate').value="";
+    document.getElementById('evtDesc').value="";
+
+}
+
+function deleteevent() {
+
+
+    $.ajax({
+		url: 'http://127.0.0.1:5000/evt/'+data2,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			if(resp.status == 'ok'){
+
+				showeventlist();
+
+			}
+			else{
+
+                alert(resp.message);
+			}
+		},
+		error: function(err)
+		{
+			alert("Error");
+		}
+	});
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////// M E E T I N G S ////////////////////////////////////////////////
+function rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo)
+{
+
+	return '<tr class="table-success">'+
+			'<td>'+meetingNo+'</td>'+
+			'<td>'+meetingName+'</td>'+
+			'<td>'+meetingDate+'</td>'+
+			'<td>'+meetingDesc+'</td>'+
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'</tr>';
+
+}
 
 function showmeetinglist(){
 
@@ -387,19 +569,23 @@ function showmeetinglist(){
 	});
 }
 
-function rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo)
+
+
+///////////////////////////////////////////////////// S O C I E T Y  T R A N S A C T I O N S ////////////////////////////////////////////////
+function rowstlist(amount, deadline, ornumber, particular, transDate, transNo)
 {
 
 	return '<tr class="table-success">'+
-			'<td>'+meetingNo+'</td>'+
-			'<td>'+meetingName+'</td>'+
-			'<td>'+meetingDate+'</td>'+
-			'<td>'+meetingDesc+'</td>'+
+			'<td>'+transNo+'</td>'+
+			'<td>'+transDate+'</td>'+
+			'<td>'+deadline+'</td>'+
+			'<td>'+ornumber+'</td>'+
+			'<td>'+amount+'</td>'+
+			'<td>'+particular+'</td>'+
 			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
 			'</tr>';
 
 }
-
 
 function showsoctlist(){
 
@@ -437,18 +623,5 @@ function showsoctlist(){
 	});
 }
 
-function rowstlist(amount, deadline, ornumber, particular, transDate, transNo)
-{
 
-	return '<tr class="table-success">'+
-			'<td>'+transNo+'</td>'+
-			'<td>'+transDate+'</td>'+
-			'<td>'+deadline+'</td>'+
-			'<td>'+ornumber+'</td>'+
-			'<td>'+amount+'</td>'+
-			'<td>'+particular+'</td>'+
-			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
-			'</tr>';
-
-}
 
