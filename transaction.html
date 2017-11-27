@@ -1,3 +1,4 @@
+<!-- By: Nicole Raine S. Cabasa -->
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
@@ -8,10 +9,18 @@
             TRANSACTIONS
         </title>
 
-        <link href="assets/css/bootstrap.css" rel="stylesheet" />
-        <link href="assets/css/font-awesome.css" rel="stylesheet" />
-        <link href="assets/css/style.css" rel="stylesheet" />
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+            <link href="assets/css/bootstrap.css" rel="stylesheet" />
+            <link href="assets/css/font-awesome.css" rel="stylesheet" />
+            <link href="assets/css/style.css" rel="stylesheet" />
+            <link href="assets/css/dataTables.bootstrap.css" rel="stylesheet">
+            <link href="assets/css/table/jquery.dataTables.min.css" rel="stylesheet" >
+            <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+            <link href="ui/dist/css/bootstrap.min.css" rel="stylesheet">
+            <script src="jQuery-2.1.4.min.js"></script>
+            <script src="js/bootstrap.min.js"></script>
+            <script type="text/javascript" src ="app.js"></script>
+
     </head>
 
     <body>
@@ -25,52 +34,250 @@
                         <span class="icon-bar"></span>
                     </button>
                     <img src="assets/img/logo.png" />
-                    <a class="navbar-brand" href="masterlist.html"></a>
-                </div>
-                <div class="navbar-collapse collapse ">
-                    <ul id="menu-top" class="nav navbar-nav navbar-right" style="margin-top: 30px">
-                        <li><a href="masterlist.html">Master List</a></li>
-                        <li><a href="event.html">Event</a></li>
-                        <li><a href="meeting.html">Meeting</a></li>
-                        <li><a class="menu-top-active" href="transaction.html">Society Transaction</a></li>
-                        <li><a href="login.html" style="margin-left: 30px">Logout</a></li>
-                    </ul>
+                    <a class="navbar-brand" href="home.html"></a>
+
                 </div>
             </div>
         </div>
         <!--END OF LOGO HEADER-->
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <!--START OF FOOTER-->
-        <footer>
+        <!--START OF MENU SECTION-->
+        <section class="menu-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        &copy; 2017 Society Central | By : <a>NRSC</a>
+                        <div class="navbar-collapse collapse ">
+                            <ul id="menu-top" class="nav navbar-nav navbar-right">
+                                <li id="home"><a href="home.html">Home</a></li>
+                                <li id="masterlist"><a href="masterlist.html">Master List</a></li>
+                                <li id="event"><a href="event.html">Event</a></li>
+                                <li id="meeting"><a href="meeting.html">Meeting</a></li>
+                                <li id="transaction"><a class="menu-top-active" href="transaction.html">Society Transaction</a></li>
+                                <li><a href="login.html" style="margin-left: 35px">Logout</a></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </footer>
-        <!--END OF FOOTER-->
+        </section>
+        <!--END OF MENU SECTION-->
 
+         <!--START OF HEADER-->
+        <div class="content-wrapper">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="alert alert-success" align="center">
+                            This is for the Aspiring Body of Achievers as a Computer Upgraded Society.
+                            Only officers and advisers have the right to access this platform.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--END OF HEADER-->
+
+        <!-- START OF CONTENT -->
+            <div class="content-wrapper" >
+                <div class="container">
+                    <div id="stlist" align="left" >
+                        <div class="row">
+                            <div class="col-md-12">
+                                <h4 class="page-head-line"><b>List of Transactions</b></h4>
+                            </div>
+                        </div>
+                        <form class="form-inline" pull-left>
+                            <br>
+                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">Add Transaction</button>
+                            <button type="button" onclick="showsoctlist();" class="btn btn-primary">Show transaction list</button>
+
+                            <div class="form-group">
+							    <input type="text" class="form-control" id="stdata" name="stdata" placeholder="Search">
+							    <a href="#"><span onclick= "searchstlist();" class="glyphicon glyphicon-search"></span></a>
+						    </div>
+                            <br><br><br>
+                        </form>
+                    </div>
+
+                    <!-- SHOW LIST OF TRANSACTIONS -->
+                    <div id="stlisttable" class="row" style="display:none">
+                        <div class="col-md-12">
+                            <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Transaction Number</th>
+                                            <th>Date</th>
+                                            <th>Deadline</th>
+                                            <th>OR Number</th>
+                                            <th>Amount</th>
+                                            <th>Particular</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="ssoctrans"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF LIST OF TRANSACTIONS -->
+
+                    <!-- SEARCH LIST OF TRANSACTIONS -->
+                    <div id="viewsstlist" class="row" style="display:none">
+                        <div class="col-md-12">
+                            <div id="datatable_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                <table id="datatable" class="table table-striped table-bordered" cellspacing="0" width="100%" role="grid" aria-describedby="datatable_info" style="width: 100%;">
+                                    <thead>
+                                        <tr role="row">
+                                            <th>Transaction Number</th>
+                                            <th>Date</th>
+                                            <th>Deadline</th>
+                                            <th>OR Number</th>
+                                            <th>Amount</th>
+                                            <th>Particular</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="searchedst"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF SEARCH LIST OF TRANSACTIONS -->
+
+                    <!-- ADD TRANSACTIONS -->
+                    <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <span aria-hidden="true">&times;</span>
+                                        <span class="sr-only">Close</span>
+                                    </button>
+                                    <h4 class="modal-title" id="myModalLabel">Add Transaction</h4>
+                                </div>
+
+                                <!--MODAL BODY-->
+                                <div class="modal-body">
+                                    <form role="form" action="">
+                                        <div class="form-group">
+                                            <label for="tNo">Transaction Number</label>
+                                            <input type="text" class="form-control" id="tNo" placeholder="****" required="required">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tDate">Date</label>
+                                            <input type="text" class="form-control" id="tDate" placeholder="mm/dd/yyyy">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tdeadline">Deadline</label>
+                                            <input type="text" class="form-control" id="tdeadline" placeholder="mm/dd/yyyy">
+                                        </div>
+                                         <div class="form-group">
+                                            <label for="torn">OR Number</label>
+                                            <input type="text" class="form-control" id="torn" placeholder="***-***-***">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tamt">Amount</label>
+                                            <input type="text" class="form-control" id="tamt" placeholder="P 00.00">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="tpart">Description</label>
+                                            <input type="text" class="form-control" id="tpart" placeholder="">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" onclick="addsoctrans();" class="btn btn-success btn-lg" data-dismiss="modal">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF ADD TRANSACTIONS -->
+
+                    <!-- UPDATE TRANSACTIONS -->
+                    <div id="edit" class="modal fade" aria-hidden="true" aria-labelledby="edit" role="dialog" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
+                                    <h4 id="Heading" class="modal-title custom_align">Edit Event Details</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form" action="" method="POST">
+                                        <div class="form-group">
+                                            <label for="stNo">Transaction Number</label>
+                                            <input type="text" class="form-control" id="stNo" required="required" readonly>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="stDate">Date</label>
+                                            <input type="text" class="form-control" id="stDate" placeholder="mm/dd/yyyy">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="stdeadline">Deadline</label>
+                                            <input type="text" class="form-control" id="stdeadline" placeholder="mm/dd/yyyy">
+                                        </div>
+                                         <div class="form-group">
+                                            <label for="storn">OR Number</label>
+                                            <input type="text" class="form-control" id="storn" placeholder="***-***-***">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="stamt">Amount</label>
+                                            <input type="text" class="form-control" id="stamt" placeholder="P 00.00">
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="stpart">Description</label>
+                                            <input type="text" class="form-control" id="stpart" placeholder="">
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" onclick="editsoctrans();" class="btn btn-success btn-lg" data-dismiss="modal">Save</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF UPDATE TRANSACTIONS -->
+
+                    <!-- DELETE TRANSACTIONS -->
+                    <div id="delete" class="modal fade" aria-hidden="true" aria-labelledy="edit" role="dialog" tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
+                                    <h4 id="Heading" class="modal-title custom_align">Delete</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="alert alert-danger">
+                                        <span class="glyphicon glyphicon-warning-sign"></span>
+                                        Are you sure you want to delete this record?
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button onclick="deletesoctrans();" class="btn btn-success" data-dismiss="modal"  type="button">
+                                        <span class="glyphicon glyphicon-ok-sign"></span>
+                                        Yes
+                                    </button>
+                                    <button class="btn btn-default" data-dismiss="modal" type="button">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                        No
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- EOF DELETE TRANSACTIONS -->
+
+                </div>
+            </div>
+            <!-- END OF CONTENT -->
 
     </body>
-
         <script src="jQuery-2.1.4.min.js"></script>
+        <script src="ui/js/bootstrap.min.js"></script>
 	    <script src="app.js"></script>
+        <script src="assets/js/jquery-1.11.1.js"></script>
+	    <script src="assets/js/jquery.dataTables.min.js"></script>
+	    <script src="assets/js/dataTables.bootstrap.js"></script>
+	    <script src="assets/js/bootstrap.js"></script>
 
 </html>
