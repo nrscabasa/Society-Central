@@ -18,15 +18,17 @@ $(function(){
 
 	$('#meeting').click(function(){
 
-		$('#mlist').hide();
-		$('#mlisttable').hide();
+		$('#metlist').show();
+		$('#metlisttable').hide();
+		$('#searchedmet').hide();
 
 	});
 
 	$('#transaction').click(function(){
 
-		$('#mlist').hide();
-		$('#mlisttable').hide();
+		$('#sttlist').show();
+		$('#stlisttable').hide();
+		$('#searchedst').hide();
 
 	});
 
@@ -34,6 +36,8 @@ $(function(){
 
 var data;
 var data2;
+var data3;
+var data4;
 
 function login(){
 	var un=$('#admin').val();
@@ -343,7 +347,7 @@ function showeventlist(){
 				}
 			}
 			else{
-				$('searchedel').html("");
+				$('elisttable').html("");
                 alert(resp.message);
 			}
 		},
@@ -442,6 +446,7 @@ function clickdata2(b) {
     n = n-1;
     data2 = document.getElementById("sevents").rows[n].cells[0].innerHTML;
     document.getElementById('evtNo').value = data2;
+    //alert(data2);
 
 }
 
@@ -510,26 +515,17 @@ function deleteevent() {
 }
 
 
-
-
-
-
-
-
-
-
-
-
 ///////////////////////////////////////////////////// M E E T I N G S ////////////////////////////////////////////////
 function rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo)
 {
 
-	return '<tr class="table-success">'+
+	return '<tr class="table-success" onclick="clickdata3(this)">'+
 			'<td>'+meetingNo+'</td>'+
 			'<td>'+meetingName+'</td>'+
 			'<td>'+meetingDate+'</td>'+
 			'<td>'+meetingDesc+'</td>'+
-			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button>' +
+			'</a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
 			'</tr>';
 
 }
@@ -553,12 +549,16 @@ function showmeetinglist(){
 
 
 					$('#smeetings').append(rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo));
-
+					$('#metlist').show();
+                    $('#metlisttable').show();
+                    //$('#searchedmet').hide();
+                    $('#viewsmetlist').hide();
+                    document.getElementById('metdata').value="";
 
 				}
 			}
 			else{
-				$('').html("");
+				$('metlisttable').html("");
                 alert(resp.message);
 			}
 		},
@@ -569,20 +569,177 @@ function showmeetinglist(){
 	});
 }
 
+function searchmetlist(){
+
+	var data =$('#metdata').val();
+	$.ajax({
+		url: 'http://127.0.0.1:5000/meetingdetails/'+data,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			$("#searchedmet").html("");
+
+			if(resp.status == 'ok'){
+				for(i=0; i<resp.count; i++)
+				{
+					meetingDate = resp.entries[i].meetingDate;
+					meetingDesc = resp.entries[i].meetingDesc;
+					meetingName = resp.entries[i].meetingName;
+					meetingNo = resp.entries[i].meetingNo;
+
+					$("#searchedmet").append(rowmetlist(meetingDate, meetingDesc, meetingName, meetingNo));
+					$('#viewsmetlist').show();
+					$('#metlisttable').hide();
+					//$('#sevents').hide();
+					$('#searchedel').show();
+					//$('#viewselist').show();
+
+				}
+
+			}
+			else{
+				$("#searchedmet").html("");
+				alert(resp.message);
+			}
+
+		},
+		error: function(err)
+		{
+
+			alert("Data not found");
+		}
+
+
+	});
+}
+
+function addmeeting(){
+	$.ajax({
+		data:{
+			mNo: $('#mNo').val(),
+			mName:$('#mName').val(),
+			mDate:$('#mDate').val(),
+			mDesc:$('#mDesc').val(),
+
+		},
+		url:'http://127.0.0.1:5000/meeting',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert(resp.message);
+		    updateam();
+			showmeetinglist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+}
+
+function updateam(){
+    document.getElementById('mNo').value="";
+    document.getElementById('mName').value="";
+    document.getElementById('mDate').value="";
+    document.getElementById('mDesc').value="";
+
+}
+
+//Data per row in MEETING LIST TABLE
+function clickdata3(c) {
+
+    var n = c.rowIndex;
+    n = n-1;
+    data3 = document.getElementById("smeetings").rows[n].cells[0].innerHTML;
+    document.getElementById('metNo').value = data3;
+    //alert(data3);
+
+}
+
+function editmeeting() {
+
+    $.ajax({
+		data:{
+			metNo: $('#metNo').val(),
+			metName:$('#metName').val(),
+			metDate:$('#metDate').val(),
+			metDesc:$('#metDesc').val(),
+
+		},
+		url:'http://127.0.0.1:5000/mtng',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert("Updated");
+		    updateem();
+			showmeetinglist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+
+}
+
+function updateem(){
+    document.getElementById('metNo').value="";
+    document.getElementById('metName').value="";
+    document.getElementById('metDate').value="";
+    document.getElementById('metDesc').value="";
+
+}
+
+function deletemeeting() {
+
+
+    $.ajax({
+		url: 'http://127.0.0.1:5000/mtng/'+data3,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			if(resp.status == 'ok'){
+
+				showmeetinglist();
+
+			}
+			else{
+
+                alert(resp.message);
+			}
+		},
+		error: function(err)
+		{
+			alert("Error");
+		}
+	});
+
+}
+
+
 
 
 ///////////////////////////////////////////////////// S O C I E T Y  T R A N S A C T I O N S ////////////////////////////////////////////////
 function rowstlist(amount, deadline, ornumber, particular, transDate, transNo)
 {
 
-	return '<tr class="table-success">'+
+	return '<tr class="table-success" onclick="clickdata4(this)">'+
 			'<td>'+transNo+'</td>'+
 			'<td>'+transDate+'</td>'+
 			'<td>'+deadline+'</td>'+
 			'<td>'+ornumber+'</td>'+
 			'<td>'+amount+'</td>'+
 			'<td>'+particular+'</td>'+
-			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button> </a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
+			'<td> <a title="Edit" data-toggle="tooltip" data-placement="top"><button class="btn btn-primary btn-xs" data-target="#edit" data-toggle="modal" data-title="Edit"><span class="glyphicon glyphicon-pencil"></span></button>' +
+			'</a><a title="Delete" data-toggle="tooltip" data-placement="top"><button class="btn btn-danger btn-xs" data-target="#delete" data-toggle="modal" data-title="Delete"> <span class="glyphicon glyphicon-trash"></span></button> </a></td>' +
 			'</tr>';
 
 }
@@ -595,7 +752,7 @@ function showsoctlist(){
 		dataType: "json",
 		success: function(resp)
 		{
-			$('#ssoctlist').html("");
+			$('#ssoctrans').html("");
 			if(resp.status == 'ok'){
 				for(i=0;  i<resp.count; i++)
 				{
@@ -606,13 +763,18 @@ function showsoctlist(){
 					transDate = resp.entries[i].transDate;
 					transNo = resp.entries[i].transNo;
 
-					$('#ssoctlist').append(rowstlist(amount, deadline, ornumber, particular, transDate, transNo));
 
+					$('#ssoctrans').append(rowstlist(amount, deadline, ornumber, particular, transDate, transNo));
+					$('#stlist').show();
+                    $('#stlisttable').show();
+                    $('#searchedst').hide();
+                    $('#viewsstlist').hide();
+                    document.getElementById('stdata').value="";
 
 				}
 			}
 			else{
-				$('').html("");
+				$('stlisttable').html("");
                 alert(resp.message);
 			}
 		},
@@ -623,5 +785,167 @@ function showsoctlist(){
 	});
 }
 
+function searchstlist(){
+
+	var data =$('#stdata').val();
+	$.ajax({
+		url: 'http://127.0.0.1:5000/transactiondetails/'+data,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			$("#searchedst").html("");
+
+			if(resp.status == 'ok'){
+				for(i=0; i<resp.count; i++)
+				{
+					amount = resp.entries[i].amount;
+					deadline = resp.entries[i].deadline;
+					ornumber = resp.entries[i].ornumber;
+					particular = resp.entries[i].particular;
+					transDate = resp.entries[i].transDate;
+					transNo = resp.entries[i].transNo;
+
+					$("#searchedst").append(rowstlist(amount, deadline, ornumber, particular, transDate, transNo));
+					$('#viewsstlist').show();
+					$('#stlisttable').hide();
+					//$('#ssoctrans').hide();
+					$('#searchedst').show();
+					//$('#viewselist').show();
+
+				}
+
+			}
+			else{
+				$("#searchedst").html("");
+				alert(resp.message);
+			}
+
+		},
+		error: function(err)
+		{
+
+			alert("Data not found");
+		}
 
 
+	});
+}
+
+function addsoctrans(){
+	$.ajax({
+		data:{
+			tNo: $('#tNo').val(),
+			tDate:$('#tDate').val(),
+			tdeadline:$('#tdeadline').val(),
+			torn:$('#torn').val(),
+			tamt:$('#tamt').val(),
+			tpart:$('#tpart').val(),
+
+		},
+		url:'http://127.0.0.1:5000/transaction',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert(resp.message);
+		    updateast();
+			showsoctlist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+}
+
+function updateast(){
+    document.getElementById('tNo').value="";
+    document.getElementById('tDate').value="";
+    document.getElementById('tdeadline').value="";
+    document.getElementById('torn').value="";
+    document.getElementById('tamt').value="";
+    document.getElementById('tpart').value="";
+
+}
+
+//Data per row in TRANSACTION LIST TABLE
+function clickdata4(d) {
+
+    var n = d.rowIndex;
+    n = n-1;
+    data4 = document.getElementById("ssoctrans").rows[n].cells[0].innerHTML;
+    document.getElementById('stNo').value = data4;
+    //alert(data2);
+
+}
+
+function editsoctrans() {
+
+    $.ajax({
+		data:{
+			stNo: $('#stNo').val(),
+			stDate:$('#stDate').val(),
+			stdeadline:$('#stdeadline').val(),
+			storn:$('#storn').val(),
+			stamt:$('#stamt').val(),
+			stpart:$('#stpart').val(),
+
+		},
+		url:'http://127.0.0.1:5000/soctrans',
+		type: "POST",
+		dataType:"json",
+		success:function(resp)
+		{
+		    //alert("Updated");
+		    updateest();
+			showsoctlist();
+
+		},
+		error: function(err)
+		{
+			alert("Error in the system occurred");
+		}
+
+	});
+
+}
+
+function updateest(){
+    document.getElementById('stNo').value="";
+    document.getElementById('stDate').value="";
+    document.getElementById('stdeadline').value="";
+    document.getElementById('storn').value="";
+    document.getElementById('stamt').value="";
+    document.getElementById('stpart').value="";
+
+}
+
+function deletesoctrans() {
+
+
+    $.ajax({
+		url: 'http://127.0.0.1:5000/soctrans/'+data4,
+		type: "GET",
+		dataType: "json",
+		success: function(resp)
+		{
+			if(resp.status == 'ok'){
+
+				showsoctlist();
+
+			}
+			else{
+
+                alert(resp.message);
+			}
+		},
+		error: function(err)
+		{
+			alert("Error");
+		}
+	});
+
+}
