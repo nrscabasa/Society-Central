@@ -215,6 +215,29 @@ def addmeeting():
 
     return jsonify ({'status': 'ok', 'message': res[0][0]})
 
+#Update meeting
+@app.route('/mtng', methods=['POST'])
+def updatemtng():
+    metNo = request.form['metNo']
+    metName = request.form['metName']
+    metDate = request.form['metDate']
+    metDesc = request.form['metDesc']
+
+    res = spcall ("updateMeeting", (metNo, metName, metDate, metDesc), True)
+    if 'Error' in str(res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
+#Delete meeting
+@app.route('/mtng/<string:data>', methods=['GET'])
+def deletemtng(data):
+    res = spcall ("delMeeting", (data,), True)
+    if 'Error' in str(res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
 #View List of transactions
 @app.route ('/transactions', methods=['GET'])
 def viewTranslist():
@@ -254,6 +277,31 @@ def addSocietyTrans():
 
     res = spcall ("newSocietyTrans", (tNo, tDate, tdeadline, torn, tamt, tpart), True)
     if 'Transaction Already Exists' in res[0][0]:
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
+#Update transaction
+@app.route('/soctrans', methods=['POST'])
+def updatesoctrans():
+    stNo = request.form['stNo']
+    stDate = request.form['stdate']
+    stdeadline = request.form['stdeadline']
+    storn = request.form['storn']
+    stamt = request.form['stamt']
+    stpart = request.form['stpart']
+
+    res = spcall ("updateTrans", (stNo, stDate, stdeadline, storn, stamt, stpart), True)
+    if 'Error' in str(res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
+#Delete transaction
+@app.route('/soctrans/<string:data>', methods=['GET'])
+def deletesoct(data):
+    res = spcall ("delTrans", (data,), True)
+    if 'Error' in str(res[0][0]):
         return jsonify ({'status': 'error', 'message': res[0][0]})
 
     return jsonify ({'status': 'ok', 'message': res[0][0]})
