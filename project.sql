@@ -1,66 +1,6 @@
 -- *** PROJECT DATABASE *** --
 -- By: Nicole Raine S. Cabasa --
 
-
-------------------------------------------------------------------------------------------------------------------------
--- Table for admin
-create table admin (
-    username text primary key,
-    password text
-);
-
--- Add new admin
-create or replace function newadmin(par_un text, par_pw text) returns text as
-	$$
-
-		declare
-			loc_id text;
-			loc_res text;
-
-
-		begin
-
-			select into loc_id username from admin where username = par_un;
-			if loc_id isnull then
-				insert into admin(username, password) values (par_un, par_pw);
-
-				loc_res = 'OK';
-
-			else
-				loc_res ='Data exists';
-
-			end if;
-				return loc_res;
-
-		end;
-	$$
-	language 'plpgsql'
-	-- select newadmin('Adm1', 'Admin123');
-
--- Access checking for admin
-create or replace function checkaccess(par_un text, par_pw text) returns text as
-	$$
-
-		declare
-			loc_id text;
-			loc_res text;
-
-		begin
-			select into loc_id username from admin where username = par_un and password = par_pw;
-
-			if loc_id is null then
-				loc_res = 'Unauthorized';
-
-			else
-				loc_res = 'Granted';
-
-			end if;
-				return loc_res;
-		end;
-	$$
-
-	language 'plpgsql';
-
 ---------------------------------------------------------------------------------------------------------------
 
 -- Table for student
@@ -98,6 +38,7 @@ $$
 $$
   language 'plpgsql';
   -- select newStudent('2013-1633', 'Nicole Raine', 'Segovia', 'Cabasa', '5', '09263176063', 'AF: Paid', 'Cleared');
+  -- select newStudent('2014-0097', 'Jea Joy', 'Davis', 'Cabasa', '3', '09271234567', 'AF: Paid', 'Not Cleared');
 
 
 -- View student details/Search
@@ -114,6 +55,7 @@ $$
   select idnum, fname, mname, lname, yearLevel, contactnum, liability, clearanceStat from student;
 $$
   language 'sql';
+  -- select * from student;
 
 -- Update student details
 create or replace function updateStudent(in par_idnum text, par_yearLevel int2, par_contactnum text, par_liability text, par_clearanceStat text) returns text as
@@ -151,6 +93,7 @@ $$
   END;
 $$
   language 'plpgsql';
+  -- select delStudent('2014-0097');
 
 
 ------------------------------------------------------------------------------------------------------------------------
@@ -184,6 +127,8 @@ $$
   END;
 $$
   language 'plpgsql';
+  -- select newEvent('777', 'ECOE GAAP', '11-25-2017', 'General Assembly and Acquaintance Party');
+  -- select newEvent('888', 'PALAKASAN 2017', '09-25-2017', 'Msu-iit palakasan');
 
 -- View list of events
 create or replace function viewEventlist(out text, out text, out text, out text) returns setof record as
@@ -271,6 +216,9 @@ $$
   END;
 $$
   language 'plpgsql';
+  -- select newMeeting('111', 'ECOE Palakasan', '10-17-2017', 'Unsay events apilan');
+  -- select newMeeting('222', 'COE Palakasan', '09-10-2017', 'Discuss events and etc.');
+
 
 -- View list of meetings
 create or replace function viewMeetinglist(out text, out text, out text, out text) returns setof record as
@@ -358,6 +306,9 @@ $$
   END;
 $$
   language 'plpgsql';
+  -- select newSocietyTrans('11021', '06-13-2017', '07-13-2017', '1234567A', '250.00', 'Assessment Fee');
+  -- select newSocietyTrans('11022', '08-25-2017', '09-10-2017', '1234567B', '500.00', 'KASAMA AF');
+
 
 -- View list of transactions
 create or replace function viewTranslist(out text, out text, out text, out text, out text, out text) returns setof record as
@@ -374,7 +325,7 @@ $$
   language 'sql';
 
 -- Update society transactions
-create or replace function updateTrans(in par_transNo int, par_transDate text, par_deadline text, par_ornumber text, par_amount text, par_particular text) returns text as
+create or replace function updateTrans(in par_transNo text, par_transDate text, par_deadline text, par_ornumber text, par_amount text, par_particular text) returns text as
 $$
   DECLARE
     loc_id text;
@@ -394,7 +345,7 @@ $$
 
 
 -- Delete transactions
-create or replace function delTrans(par_transNo int) returns text as
+create or replace function delTrans(par_transNo text) returns text as
 $$
   DECLARE
     loc_id text;
