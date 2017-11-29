@@ -9,6 +9,16 @@
             TRANSACTIONS
         </title>
 
+            <style>
+
+                #sect {
+                    background-color: white;
+                    border: 1px solid blue;
+
+                }
+
+            </style>
+
             <link href="assets/css/bootstrap.css" rel="stylesheet" />
             <link href="assets/css/font-awesome.css" rel="stylesheet" />
             <link href="assets/css/style.css" rel="stylesheet" />
@@ -23,7 +33,7 @@
 
     </head>
 
-    <body>
+    <body background="ui/gray.jpg">
         <!--START OF LOGO HEADER-->
         <div class="navbar navbar-inverse set-radius-zero">
             <div class="container">
@@ -42,7 +52,7 @@
         <!--END OF LOGO HEADER-->
 
         <!--START OF MENU SECTION-->
-        <section class="menu-section">
+        <section id="sect" class="menu-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -53,7 +63,6 @@
                                 <li id="event"><a href="event.html">Event</a></li>
                                 <li id="meeting"><a href="meeting.html">Meeting</a></li>
                                 <li id="transaction"><a class="menu-top-active" href="transaction.html">Society Transaction</a></li>
-                                <li><a href="login.html" style="margin-left: 35px">Logout</a></li>
                             </ul>
                         </div>
                     </div>
@@ -62,21 +71,7 @@
         </section>
         <!--END OF MENU SECTION-->
 
-         <!--START OF HEADER-->
-        <div class="content-wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="alert alert-success" align="center">
-                            This is for the Aspiring Body of Achievers as a Computer Upgraded Society.
-                            Only officers and advisers have the right to access this platform.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--END OF HEADER-->
-
+        <br>
         <!-- START OF CONTENT -->
             <div class="content-wrapper" >
                 <div class="container">
@@ -162,26 +157,26 @@
                                     <form role="form" action="">
                                         <div class="form-group">
                                             <label for="tNo">Transaction Number</label>
-                                            <input type="text" class="form-control" id="tNo" placeholder="****" required="required">
+                                            <input type="text" class="form-control" id="tNo" placeholder="t-****" required="required">
                                         </div>
                                         <div class="form-group">
                                             <label for="tDate">Date</label>
-                                            <input type="text" class="form-control" id="tDate" placeholder="mm/dd/yyyy">
+                                            <input type="text" class="form-control" id="tDate" placeholder="mm-dd-yyyy">
                                         </div>
                                         <div class="form-group">
                                             <label for="tdeadline">Deadline</label>
-                                            <input type="text" class="form-control" id="tdeadline" placeholder="mm/dd/yyyy">
+                                            <input type="text" class="form-control" id="tdeadline" placeholder="mm-dd-yyyy">
                                         </div>
                                          <div class="form-group">
                                             <label for="torn">OR Number</label>
-                                            <input type="text" class="form-control" id="torn" placeholder="***-***-***">
+                                            <input type="text" class="form-control" id="torn" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="tamt">Amount</label>
-                                            <input type="text" class="form-control" id="tamt" placeholder="P 00.00">
+                                            <input type="text" class="form-control" id="tamt" placeholder="0.00">
                                         </div>
                                         <div class="form-group">
-                                            <label for="tpart">Description</label>
+                                            <label for="tpart">Descripton</label>
                                             <input type="text" class="form-control" id="tpart" placeholder="">
                                         </div>
                                     </form>
@@ -200,7 +195,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button class="close" aria-hidden="true" data-dismiss="modal" type="button">&times;</button>
-                                    <h4 id="Heading" class="modal-title custom_align">Edit Event Details</h4>
+                                    <h4 id="Heading" class="modal-title custom_align">Edit Transaction Details</h4>
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" action="" method="POST">
@@ -210,15 +205,15 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="stDate">Date</label>
-                                            <input type="text" class="form-control" id="stDate" placeholder="mm/dd/yyyy">
+                                            <input type="text" class="form-control" id="stDate" placeholder="mm-dd-yyyy">
                                         </div>
                                         <div class="form-group">
                                             <label for="stdeadline">Deadline</label>
-                                            <input type="text" class="form-control" id="stdeadline" placeholder="mm/dd/yyyy">
+                                            <input type="text" class="form-control" id="stdeadline" placeholder="mm-dd-yyyy">
                                         </div>
                                          <div class="form-group">
                                             <label for="storn">OR Number</label>
-                                            <input type="text" class="form-control" id="storn" placeholder="***-***-***">
+                                            <input type="text" class="form-control" id="storn" placeholder="">
                                         </div>
                                         <div class="form-group">
                                             <label for="stamt">Amount</label>
