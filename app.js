@@ -39,39 +39,6 @@ var data2;
 var data3;
 var data4;
 
-function login(){
-	var un=$('#admin').val();
-	var pw= $('#password').val();
-
-	$.ajax({
-		url:'http:127.0.0.1:5000/access',
-		dataType: 'json',
-		type:'POST',
-		data:
-		{
-			admin: un,
-			password:pw
-		},
-		success: function(resp){
-
-			if(resp.status == 'Granted'){
-
-				showmasterlist();
-
-			}
-
-			else{
-
-
-			}
-		},
-		error: function(err){
-			alert("Error");
-		}
-
-	});
-}
-
 ///////////////////////////////////////////////////// M A S T E R  L I S T ////////////////////////////////////////////////
 function rowmlist(clearanceStat, contactnum, fname, idnum, liability, lname, mname, yearLevel)
 {
@@ -131,7 +98,7 @@ function showmasterlist(){
 		},
 		error: function(err)
 		{
-			alert("Error");
+			alert("Table is empty");
 		}
 	});
 }
@@ -178,7 +145,7 @@ function searchmlist(){
 		error: function(err)
 		{
 
-			alert("Error in the system occurred");
+			alert("Data not found");
 		}
 
 
@@ -396,7 +363,7 @@ function searchelist(){
 		error: function(err)
 		{
 
-			alert("Error in the system occurred");
+			alert("Data not found");
 		}
 
 
@@ -571,7 +538,7 @@ function showmeetinglist(){
 
 function searchmetlist(){
 
-	var data =$('#metdata').val();
+	var data= $('#metdata').val();
 	$.ajax({
 		url: 'http://127.0.0.1:5000/meetingdetails/'+data,
 		type: "GET",
@@ -678,6 +645,7 @@ function editmeeting() {
 		    //alert("Updated");
 		    updateem();
 			showmeetinglist();
+
 
 		},
 		error: function(err)
@@ -833,32 +801,30 @@ function searchstlist(){
 }
 
 function addsoctrans(){
-	$.ajax({
-		data:{
-			tNo: $('#tNo').val(),
-			tDate:$('#tDate').val(),
-			tdeadline:$('#tdeadline').val(),
-			torn:$('#torn').val(),
-			tamt:$('#tamt').val(),
-			tpart:$('#tpart').val(),
 
-		},
-		url:'http://127.0.0.1:5000/transaction',
-		type: "POST",
-		dataType:"json",
-		success:function(resp)
-		{
-		    //alert(resp.message);
-		    updateast();
-			showsoctlist();
+    var stno = $('#tNo').val();
+    var stdate = $('#tDate').val();
+    var stdeadline = $('#tdeadline').val();
+    var storn = $('#torn').val();
+    var stpart = $('#tpart').val();
+    var stamt = $('#tamt').val();
 
-		},
-		error: function(err)
+    $.ajax({
+
+        url:'http://127.0.0.1:5000/transaction/'+stno+'/'+stdate+'/'+stdeadline+'/'+storn+'/'+stamt+'/'+stpart,
+        type: 'GET',
+        dataType: 'json',
+        success: function(resp){
+
+             updateest();
+			 showsoctlist();
+        },
+        error: function(err)
 		{
 			alert("Error in the system occurred");
 		}
+    });
 
-	});
 }
 
 function updateast(){
@@ -878,40 +844,34 @@ function clickdata4(d) {
     n = n-1;
     data4 = document.getElementById("ssoctrans").rows[n].cells[0].innerHTML;
     document.getElementById('stNo').value = data4;
-    //alert(data2);
+    //alert(data4);
 
 }
-
-function editsoctrans() {
+function editsoctrans(){
+    var stno = $('#stNo').val();
+    var stdate = $('#stDate').val();
+    var stdeadline = $('#stdeadline').val();
+    var storn = $('#storn').val();
+    var stpart = $('#stpart').val();
+    var stamt = $('#stamt').val();
 
     $.ajax({
-		data:{
-			stNo: $('#stNo').val(),
-			stDate:$('#stDate').val(),
-			stdeadline:$('#stdeadline').val(),
-			storn:$('#storn').val(),
-			stamt:$('#stamt').val(),
-			stpart:$('#stpart').val(),
 
-		},
-		url:'http://127.0.0.1:5000/soctrans',
-		type: "POST",
-		dataType:"json",
-		success:function(resp)
-		{
-		    //alert("Updated");
-		    updateest();
-			showsoctlist();
+        url:'http://127.0.0.1:5000/soctrans/'+stno+'/'+stdate+'/'+stdeadline+'/'+storn+'/'+stamt+'/'+stpart,
+        type: 'GET',
+        dataType: 'json',
+        success: function(resp){
 
-		},
-		error: function(err)
+             updateest();
+			 showsoctlist();
+        },
+        error: function(err)
 		{
 			alert("Error in the system occurred");
 		}
-
-	});
-
+    });
 }
+
 
 function updateest(){
     document.getElementById('stNo').value="";
