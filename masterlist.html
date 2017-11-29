@@ -9,6 +9,16 @@
             MASTER LIST
         </title>
 
+        <style>
+
+            #sect {
+                background-color: white;
+                border: 1px solid blue;
+
+                }
+
+        </style>
+
         <link href="assets/css/bootstrap.css" rel="stylesheet" />
         <link href="assets/css/font-awesome.css" rel="stylesheet" />
         <link href="assets/css/style.css" rel="stylesheet" />
@@ -24,7 +34,7 @@
 
     </head>
 
-    <body>
+    <body background="ui/gray.jpg">
         <!--START OF LOGO HEADER-->
         <div class="navbar navbar-inverse set-radius-zero">
             <div class="container">
@@ -43,7 +53,7 @@
         <!--END OF LOGO HEADER-->
 
         <!--START OF MENU SECTION-->
-        <section class="menu-section">
+        <section id="sect" class="menu-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -54,7 +64,6 @@
                                 <li id="event"><a href="event.html">Event</a></li>
                                 <li id="meeting"><a href="meeting.html">Meeting</a></li>
                                 <li id="transaction"><a href="transaction.html">Society Transaction</a></li>
-                                <li><a href="login.html" style="margin-left: 35px">Logout</a></li>
                             </ul>
                         </div>
                     </div>
@@ -62,23 +71,7 @@
             </div>
         </section>
         <!--END OF MENU SECTION-->
-
-        <!--START OF HEADER-->
-        <div class="content-wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="alert alert-success" align="center">
-                            This is for the Aspiring Body of Achievers as a Computer Upgraded Society.
-                            Only officers and advisers have the right to access this platform.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--END OF HEADER-->
-
-
+        <br>
         <!--START OF CONTENT -->
             <div class="content-wrapper">
                 <div class="container">
@@ -168,7 +161,7 @@
                                     <form role="form" action="">
                                         <div class="form-group">
                                             <label for="id">ID Number</label>
-                                            <input type="text" class="form-control" id="id" placeholder="**** - ****" required="required">
+                                            <input type="text" class="form-control" id="id" placeholder="****-****" required="required">
                                         </div>
                                         <div class="form-group">
                                             <label for="studfname">First Name</label>
@@ -218,25 +211,25 @@
                                 </div>
                                 <div class="modal-body">
                                     <form role="form" action="" method="POST">
-                                        <div class="form-group">
-                                            <label for="id">ID Number</label>
-                                            <input type="text" class="form-control" id="studid"  required="required" readonly>
+                                       <div class="form-group">
+                                            <label for="studid">ID Number</label>
+                                            <input type="text" class="form-control" id="studid" required="required" readonly>
                                         </div>
 
                                         <div class="form-group">
-                                            <label for="yearlev">Year Level</label>
+                                            <label for="studyearlev">Year Level</label>
                                             <input type="text" class="form-control" id="studyearlev" placeholder="(1/2/3/4/5)">
                                         </div>
                                         <div class="form-group">
-                                            <label for="cnum">Contact Number</label>
+                                            <label for="studcnum">Contact Number</label>
                                             <input type="text" class="form-control" id="studcnum" placeholder="+639*********">
                                         </div>
                                         <div class="form-group">
-                                            <label for="liab">Liability</label>
+                                            <label for="studliab">Liability</label>
                                             <input type="text" class="form-control" id="studliab" placeholder="">
                                         </div>
                                         <div class="form-group">
-                                            <label for="clearance">Clearance Status</label>
+                                            <label for="studclearance">Clearance Status</label>
                                             <input type="text" class="form-control" id="studclearance" placeholder="Cleared/Not Cleared">
                                         </div>
                                     </form>
