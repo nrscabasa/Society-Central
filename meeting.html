@@ -9,6 +9,16 @@
             MEETINGS
         </title>
 
+            <style>
+
+                #sect {
+                    background-color: white;
+                    border: 1px solid blue;
+
+                }
+
+            </style>
+
             <link href="assets/css/bootstrap.css" rel="stylesheet" />
             <link href="assets/css/font-awesome.css" rel="stylesheet" />
             <link href="assets/css/style.css" rel="stylesheet" />
@@ -23,7 +33,7 @@
 
     </head>
 
-    <body>
+    <body background="ui/gray.jpg">
         <!--START OF LOGO HEADER-->
         <div class="navbar navbar-inverse set-radius-zero">
             <div class="container">
@@ -42,7 +52,7 @@
         <!--END OF LOGO HEADER-->
 
         <!--START OF MENU SECTION-->
-        <section class="menu-section">
+        <section id="sect" class="menu-section">
             <div class="container">
                 <div class="row">
                     <div class="col-md-12">
@@ -53,7 +63,6 @@
                                 <li id="event"><a href="event.html">Event</a></li>
                                 <li id="meeting"><a class="menu-top-active" href="meeting.html">Meeting</a></li>
                                 <li id="transaction"><a href="transaction.html">Society Transaction</a></li>
-                                <li><a href="login.html" style="margin-left: 35px">Logout</a></li>
                             </ul>
                         </div>
                     </div>
@@ -61,21 +70,7 @@
             </div>
         </section>
         <!--END OF MENU SECTION-->
-
-         <!--START OF HEADER-->
-        <div class="content-wrapper">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="alert alert-success" align="center">
-                            This is for the Aspiring Body of Achievers as a Computer Upgraded Society.
-                            Only officers and advisers have the right to access this platform.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--END OF HEADER-->
+        <br>
 
         <!-- START OF CONTENT -->
             <div class="content-wrapper" >
@@ -158,7 +153,7 @@
                                     <form role="form" action="">
                                         <div class="form-group">
                                             <label for="mNo">Meeting Number</label>
-                                            <input type="text" class="form-control" id="mNo" placeholder="****-****" required="required">
+                                            <input type="text" class="form-control" id="mNo" placeholder="m-****" required="required">
                                         </div>
                                         <div class="form-group">
                                             <label for="mName">Meeting Name</label>
@@ -166,7 +161,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="mDate">Date</label>
-                                            <input type="text" class="form-control" id="mDate" placeholder="mm/dd/yyyy">
+                                            <input type="text" class="form-control" id="mDate" placeholder="mm-dd-yyyy">
                                         </div>
                                          <div class="form-group">
                                             <label for="mDesc">Description</label>
@@ -179,7 +174,8 @@
                                 </div>
                             </div>
                         </div>
-                    <!-- EOF ADD MEETINGS -->
+                    </div>
+                    <!-- EOF ADD EVENTS -->
 
                     <!-- UPDATE MEETINGS -->
                     <div id="edit" class="modal fade" aria-hidden="true" aria-labelledby="edit" role="dialog" tabindex="-1">
@@ -202,7 +198,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="metDate">Date</label>
-                                            <input type="text" class="form-control" id="metDate" placeholder="mm/dd/yyyy">
+                                            <input type="text" class="form-control" id="metDate" placeholder="mm-dd-yyyy">
                                         </div>
                                         <div class="form-group">
                                             <label for="metDesc">Description</label>
@@ -245,6 +241,7 @@
                             </div>
                         </div>
                     </div>
+
                     <!-- EOF DELETE MEETINGS -->
 
                 </div>
