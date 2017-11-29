@@ -343,6 +343,8 @@ $$
 $$
   language 'plpgsql';
 
+  -- select updateTrans('
+
 
 -- Delete transactions
 create or replace function delTrans(par_transNo text) returns text as
