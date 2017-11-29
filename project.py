@@ -28,15 +28,7 @@ def spcall(qry, param, commit=False):
 def index():
     return "Hi!"
 
-#Log in
-@app.route('/access', methods =['POST'])
-def login():
-    un = request.form['admin']
-    pw =request.form['password']
 
-    res =spcall('checkaccess', (un, pw), True)
-
-    return jsonify({'status': res[0][0]})
 
 #View list of students
 @app.route ('/masterlist', methods=['GET'])
@@ -266,36 +258,30 @@ def viewTrans(data):
     return jsonify({'status':'ok', 'entries':recs, 'count':len(recs)})
 
 #Add new transaction
-@app.route ('/transaction', methods=['POST'])
-def addSocietyTrans():
-    tNo = request.form['tNo']
-    tDate = request.form['tdate']
-    tdeadline = request.form['tdeadline']
-    torn = request.form['torn']
-    tamt = request.form['tamt']
-    tpart = request.form['tpart']
+@app.route('/transaction/<string:data1>/<string:data2>/<string:data3>/<string:data4>/<string:data5>/<string:data6>', methods=['GET'])
+def addsoctrans1(data1, data2, data3, data4, data5, data6):
 
-    res = spcall ("newSocietyTrans", (tNo, tDate, tdeadline, torn, tamt, tpart), True)
-    if 'Transaction Already Exists' in res[0][0]:
-        return jsonify ({'status': 'error', 'message': res[0][0]})
 
-    return jsonify ({'status': 'ok', 'message': res[0][0]})
+    res = spcall ("newSocietyTrans", (data1, data2, data3, data4, data5, data6), True)
 
-#Update transaction
-@app.route('/soctrans', methods=['POST'])
-def updatesoctrans():
-    stNo = request.form['stNo']
-    stDate = request.form['stdate']
-    stdeadline = request.form['stdeadline']
-    storn = request.form['storn']
-    stamt = request.form['stamt']
-    stpart = request.form['stpart']
-
-    res = spcall ("updateTrans", (stNo, stDate, stdeadline, storn, stamt, stpart), True)
     if 'Error' in str(res[0][0]):
         return jsonify ({'status': 'error', 'message': res[0][0]})
 
     return jsonify ({'status': 'ok', 'message': res[0][0]})
+
+
+#Update transaction
+@app.route('/soctrans/<string:data1>/<string:data2>/<string:data3>/<string:data4>/<string:data5>/<string:data6>', methods=['GET'])
+def updatesoctrans1(data1, data2, data3, data4, data5, data6):
+
+
+    res = spcall ("updateTrans", (data1, data2, data3, data4, data5, data6), True)
+
+    if 'Error' in str(res[0][0]):
+        return jsonify ({'status': 'error', 'message': res[0][0]})
+
+    return jsonify ({'status': 'ok', 'message': res[0][0]})
+
 
 #Delete transaction
 @app.route('/soctrans/<string:data>', methods=['GET'])
